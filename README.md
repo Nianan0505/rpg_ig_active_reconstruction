@@ -61,11 +61,25 @@ https://github.com/uzh-rpg/rpg_ig_active_reconstruction/wiki
 
 contains instructions on how to build and run the code.
 
+**RUN THE CODE**
+
+- export GAZEBO_MODEL_PATH=$HOME/program/ig_ws/src/rpg_ig_active_reconstruction/example/flying_gazebo_stereo_cam/model:$GAZEBO_MODEL_PATH
+- **roslaunch flying_gazebo_stereo_cam robot_interface.launch**
+  Launches Gazebo and loads the bunny (if you put it in the models folder), starts a viewspace model and **a robot interface ROS node** offering their services to other ig_active_reconstruction components
+- **roslaunch flying_gazebo_stereo_cam flying_gazebo_stereo_cam.launch** Launches the node that spawns the stereo camera (You should see two small boxes pointing at the origin) in Gazebo. This needs to be started after robot_interface.
+- **roslaunch ig_active_reconstruction_octomap octomap_world_representation.launch**
+  Launches a world representation ROS node using Octomap as a container and offering information gain calculation capabilities.
+- **roslaunch ig_active_reconstruction_ros basic_view_planner.launch**
+  Launches a basic view planner node with a simple command line user interface that allows you to start, pause and stop the procedure. **To start the demo, press 'g' and then 'Enter' in this terminal.**
+
 #### Acknowledgments
 
 Thanks to Pavel Vechersky for his key contributions, as well as to Elias Mueggler, Matthias Faessler, and Junjie Zhang for their valuable feedback.
-   
+
 #### Contributing
 
 You are very welcome to contribute to ig_active_reconstruction by opening a pull request via Github.
 We try to follow the ROS C++ style guide http://wiki.ros.org/CppStyleGuide
+
+
+

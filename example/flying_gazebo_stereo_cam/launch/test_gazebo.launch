@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <!-- Start gazebo and load world -->
+  <param name="/use_sim_time" value="true" />
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">	    
+    <!-- <arg name="world_name" value="$(find flying_gazebo_stereo_cam)/model/world.sdf"/>
+    <arg name="gui" value="true"/> -->
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/turtlebot3_house.world"/>    	
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>  
+  </include>
+  
+  <!-- send flying_stereo_cam urdf to param server -->
+  <!-- <param name="robot_description" command="$(find xacro)/xacro.py '$(find flying_gazebo_stereo_cam)/model/flying_stereo_cam.xacro'"/> -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_waffle.urdf.xacro" />
+  
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <!-- <node pkg="gazebo_ros" type="spawn_model" name="spawn_robot" respawn="false" output="screen"
+  args="-param robot_description
+	-urdf
+	-x 0
+	-y -1
+	-z 0.4
+	-R 0
+	-P 0
+	-Y 1.570796327
+	-model flying_stereo_cam">
+  </node> -->
+  
+  <arg name="x_pos" default="-3.0"/>
+  <arg name="y_pos" default="1.0"/>
+  <arg name="z_pos" default="0.0"/>
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model turtlebot3 -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+ 
+  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+  </node>
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+  </node>
+
+  <!-- stereo image processing node -->
+  <include file="$(find flying_gazebo_stereo_cam)/launch/stereo_processing.launch" />
+  
+  <!-- Viewspace module -->
+  <include file="$(find flying_gazebo_stereo_cam)/launch/simple_viewspace_module.launch" />
+</launch>
